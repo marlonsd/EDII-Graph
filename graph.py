@@ -1,7 +1,16 @@
-# -*- coding: latin1 -*-
+#coding: utf-8
 
 """
-	Classe Grafo
+	// ------------------------------------------------------------
+	//  Trabalho Estrutura de Dados II - Grafo
+	//		Ciênia da Computação
+	//
+	//	Aluno: Marlon da Silva Dias
+	//	GitHub: https://github.com/marlonsd/EDII-Graph
+	//	graph.py
+	//	
+	//	Classe Grafo
+	// ------------------------------------------------------------
 """
 class Graph():
 	
@@ -12,8 +21,7 @@ class Graph():
 		self.size = size
 				
 		for linha in range(size):
-			for coluna in range(size):
-				self.matriz[linha] += [0]
+			self.matriz[linha] = [0]*size # Certa linha recebe size vezes o [0]
 			self.matriz += [[]]
 				
 		"""for linha in range(size):
@@ -50,20 +58,29 @@ class Graph():
 		self.matriz += [[]] # Adicina uma nova linha, contendo somente []
 		self.size += 1
 		
+		self.matriz[self.size - 1] = [0]*self.size
+		
 		"""
 			Percorre a matriz.
-				Na última linha (self.size - 1), concatena uma nova célula contendo 0
 				Em cada linha (var: linha) na sua última coluna (self.size - 1) troca o valor por 0
 		"""
 		for linha in range(self.size):
-			self.matriz[self.size - 1] += [0]
 			self.matriz[linha][self.size - 1] = 0
-			
+					
 		return True
 		
 	def removerVertice(self, a):
-		print "Falta implementar"
-	
+		if a > 0 and a < self.size:
+			self.matriz.remove(self.matriz[a]) # Remove toda a linha a
+			self.size -= 1
+			
+			for i in range(self.size):
+				del self.matriz [i][a] # Remove a coluna a em todas as linhas
+				
+			return True
+		else:
+			return False
+				
 	def vizinhos(self, a):
 		lista = []
 		
@@ -82,17 +99,3 @@ class Graph():
 		else:
 			return False
 
-"""
-	Main
-"""
-
-obj = Graph(5)
-print obj.inserirVertice()
-print obj.adicionaAresta(5,4)
-print obj.adicionaAresta(5,2)
-print obj.adicionaAresta(5,0)
-lista = obj.vizinhos(0)
-if (lista == []):
-	print "Sem vizinho"
-else:
-	print lista
