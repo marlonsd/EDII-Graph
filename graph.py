@@ -12,6 +12,9 @@
 	//	Classe Grafo
 	// ------------------------------------------------------------
 """
+from queue import Queue
+from stack import Stack
+
 class Graph():
 	
 	matriz = [[]]
@@ -33,21 +36,21 @@ class Graph():
 		matriz = []
 		size = 0
 		
-	def adicionaAresta(self, a, b):
+	def addEdge(self, a, b):
 		if a < self.size and b < self.size:
 			self.matriz[a][b] = 1
 			return True
 		else:
 			return False
 			
-	def removerAresta(self, a, b):
+	def removeEdge(self, a, b):
 		if a < self.size and b < self.size:
 			self.matriz[a][b] = 0
 			return True
 		else:
 			return False
 		
-	def inserirVertice(self):
+	def addNode(self):
 		
 		"""
 			Em cada linha adiciona uma nova coluna vazia ( [] )
@@ -69,7 +72,7 @@ class Graph():
 					
 		return True
 		
-	def removerVertice(self, a):
+	def removeNode(self, a):
 		if a > 0 and a < self.size:
 			self.matriz.remove(self.matriz[a]) # Remove toda a linha a
 			self.size -= 1
@@ -81,7 +84,7 @@ class Graph():
 		else:
 			return False
 				
-	def vizinhos(self, a):
+	def neighbors(self, a):
 		lista = []
 		
 		for i in range(self.size):
@@ -90,7 +93,7 @@ class Graph():
 			
 		return lista
 		
-	def verificaAdjacencia(self, a, b): #B é adjacente a A (existe A -> B)
+	def checkAdjacency(self, a, b): #B é adjacente a A (existe A -> B)
 		if a < self.size and b < self.size:
 			if self.matriz[b][a] == 1 :
 				return True
@@ -99,3 +102,64 @@ class Graph():
 		else:
 			return False
 
+	def buscaAmplitude(self,origin,destination):
+		position = origin
+		checked = []
+		queue = Queue()
+
+		if (position == destination):
+			return true
+		checked.append(position)
+		queue.enqueue(position)
+
+		while(!queue.isEmpty()):
+			position = queue.dequeue()
+			if (position == destination):
+				return true
+			checked.append(position)
+
+			neighbors = self.neighbors(position)
+			while(len(neighbors) != 0):
+				position = neighbors.pop(0)
+
+				try:
+					i = checked.index(position)
+				except ValueError:
+					i = -1
+
+				if (i == -1):
+					if (position == destination):
+						return true
+					checked.append(position)
+					queue.enqueue(position)
+
+	def buscaAmplitude(self,origin,destination):
+		position = origin
+		checked = []
+		stack = Stack()
+
+		if (position == destination):
+			return true
+		checked.append(position)
+		stack.push(position)
+
+		while(!queue.isEmpty()):
+			position = stack.pop()
+			if (position == destination):
+				return true
+			checked.append(position)
+
+			neighbors = self.neighbors(position)
+			while(len(neighbors) != 0):
+				position = neighbors.pop(0)
+
+				try:
+					i = checked.index(position)
+				except ValueError:
+					i = -1
+
+				if (i == -1):
+					if (position == destination):
+						return true
+					checked.append(position)
+					stack.push(position)
