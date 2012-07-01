@@ -12,19 +12,25 @@
 	//	Classe Grafo
 	// ------------------------------------------------------------
 """
+from node import Node
 from queue import Queue
 from stack import Stack
 
 class Graph():
 	
 	matriz = [[]]
+	vertice = []
 	size = 0
 	
 	def __init__(self, size = 1):
 		self.size = size
-				
-		for linha in range(size):
-			self.matriz[linha] = [0]*size # Certa linha recebe size vezes o [0]
+		
+		for i in range(self.size):
+			node = Node(i)
+			self.vertice += [node]
+
+		for linha in range(self.size):
+			self.matriz[linha] = [0]*self.size # Certa linha recebe size vezes o [0]
 			self.matriz += [[]]
 				
 		"""for linha in range(size):
@@ -33,18 +39,59 @@ class Graph():
 			print"""
 			
 	def __done__(self):
-		matriz = []
-		size = 0
+		self.matriz = []
+		self.size = 0
+		self.vertices = []
 		
-	def addEdge(self, a, b):
-		if a < self.size and b < self.size:
-			self.matriz[a][b] = 1
+	def getSize(self):
+		return self.size
+
+	def setNode(self,index,label):
+		if (index >= 0 and index < self.size):
+			self.vertice[index].setLabel(label)
+		else:
+			print MERDA
+
+	def getID(self,position):
+		"""
+			{"vertice":{"ID":1, "dado":"Fulano de Tal", "resposta":"sucesso"}}
+
+			{"vertice":{"ID":1, "dado":"", "resposta":"falha"}}
+		"""
+		if (position >= 0 and position < self.size):
+			index = position
+		else:
+			index = -1
+
+		dado = ''
+
+		if (index >= 0):
+			dado = self.vertice[index].getLabel()
+			resposta = "sucesso"
+		else:
+			resposta = "falha"
+
+		out = "{\"vertice\":{\"ID\":"
+		out += str(index)
+		out += ", \"dado\":\""
+		out += dado
+		out += "\", \"resposta\":\""
+		out += resposta
+		out += "\"}}"
+		#return "{\"vertice\":{\"ID\":",index,", \"dado\":\"",dado,"\", \"resposta\":\"",resposta,"\"}}"
+		return out
+
+
+
+	def addEdge(self, a, b, weight):
+		if (a >= 0 and b >= 0) and (a < self.size and b < self.size):
+			self.matriz[a][b] = weight
 			return True
 		else:
 			return False
 			
 	def removeEdge(self, a, b):
-		if a < self.size and b < self.size:
+		if (a >= 0 and b >= 0) and (a < self.size and b < self.size):
 			self.matriz[a][b] = 0
 			return True
 		else:
@@ -73,7 +120,7 @@ class Graph():
 		return True
 		
 	def removeNode(self, a):
-		if a > 0 and a < self.size:
+		if a >= 0 and a < self.size:
 			self.matriz.remove(self.matriz[a]) # Remove toda a linha a
 			self.size -= 1
 			
@@ -108,14 +155,14 @@ class Graph():
 		queue = Queue()
 
 		if (position == destination):
-			return true
+			return True
 		checked.append(position)
 		queue.enqueue(position)
 
-		while(!queue.isEmpty()):
+		while(not queue.isEmpty()):
 			position = queue.dequeue()
 			if (position == destination):
-				return true
+				return True
 			checked.append(position)
 
 			neighbors = self.neighbors(position)
@@ -129,9 +176,11 @@ class Graph():
 
 				if (i == -1):
 					if (position == destination):
-						return true
+						return True
 					checked.append(position)
 					queue.enqueue(position)
+
+		return False
 
 	def buscaAmplitude(self,origin,destination):
 		position = origin
@@ -139,14 +188,14 @@ class Graph():
 		stack = Stack()
 
 		if (position == destination):
-			return true
+			return True
 		checked.append(position)
 		stack.push(position)
 
-		while(!queue.isEmpty()):
+		while(not queue.isEmpty()):
 			position = stack.pop()
 			if (position == destination):
-				return true
+				return True
 			checked.append(position)
 
 			neighbors = self.neighbors(position)
@@ -160,6 +209,8 @@ class Graph():
 
 				if (i == -1):
 					if (position == destination):
-						return true
+						return True
 					checked.append(position)
 					stack.push(position)
+
+		return False

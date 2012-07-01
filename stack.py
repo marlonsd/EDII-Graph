@@ -13,12 +13,11 @@
 	// ------------------------------------------------------------
 """
 
-Class Stack():
+class Stack():
 
 	key = []
 
 	def __init__(self):
-
 		self.key = []
 
 	def __done__(self):

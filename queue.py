@@ -13,12 +13,11 @@
 	// ------------------------------------------------------------
 """
 
-Class Queue():
+class Queue():
 
 	key = []
 
 	def __init__(self):
-
 		self.key = []
 
 	def __done__(self):
