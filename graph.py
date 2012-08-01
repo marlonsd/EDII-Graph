@@ -16,6 +16,9 @@ from node import Node
 from queue import Queue
 from stack import Stack
 
+"""
+	* Retirar os palavrões do meio do programa
+"""
 class Graph():
 	
 	matriz = [[]]
@@ -25,13 +28,17 @@ class Graph():
 	def __init__(self, size = 1):
 		self.size = size
 		
+		"""
 		for i in range(self.size):
 			node = Node(i)
 			self.vertice += [node]
+		"""
 
 		for linha in range(self.size):
-			self.matriz[linha] = [0]*self.size # Certa linha recebe size vezes o [0]
+			self.matriz[linha] = [-1]*self.size # Certa linha recebe size vezes o [0]
 			self.matriz += [[]]
+			node = Node()
+			self.vertice += [node]
 				
 		"""for linha in range(size):
 			for coluna in range(size):
@@ -49,42 +56,120 @@ class Graph():
 	def setNode(self,index,label):
 		if (index >= 0 and index < self.size):
 			self.vertice[index].setLabel(label)
+			self.vertice[index].setIndex(index)
 		else:
-			print MERDA
+			print "MERDA"
 
-	def getID(self,position):
+	def get(self,position):
 		"""
 			{"vertice":{"ID":1, "dado":"Fulano de Tal", "resposta":"sucesso"}}
 
 			{"vertice":{"ID":1, "dado":"", "resposta":"falha"}}
 		"""
 		if (position >= 0 and position < self.size):
-			index = position
+			if (self.vertice[int(position)].getIndex() >= 0):
+				index = position
+			else:
+				index = -1
 		else:
 			index = -1
 
-		dado = ''
+		if (index >= 0):
+			dado = self.vertice[int(position)].getLabel()
+			resposta = "sucesso"
+		else:
+			dado = ''
+			resposta = "falha"
+
+		return "{\"vertice\":{\"ID\":"+str(position)+", \"dado\":\""+dado+"\", \"resposta\":\""+resposta+"\"}}"
+
+	def delete(self, position):
+		"""
+			{"delete":{"ID":15,"resposta":"sucesso"}}
+
+			{"delete":{"ID":15,"resposta":"falha"}}
+
+		Dúvida: Quando ele é deletado, os demais deve ter o mesmo ID? Ou deve ser puxado à frente?
+
+		"""
+
+		if (position >= 0 and position < self.size):
+			if (self.vertice[int(position)].getIndex() >= 0):
+				index = position
+			else:
+				index = -1
+		else:
+			index = -1
 
 		if (index >= 0):
-			dado = self.vertice[index].getLabel()
+			self.matriz.remove(self.matriz[position]) # Remove toda a linha a
+			self.size -= 1
+
+			del self.vertice[position]
+			
+			for i in range(self.size):
+				del self.matriz [i][position] # Remove a coluna a em todas as linhas
+				if (i >= position):
+					self.vertice[i].setIndex(i)
 			resposta = "sucesso"
 		else:
 			resposta = "falha"
 
-		out = "{\"vertice\":{\"ID\":"
-		out += str(index)
-		out += ", \"dado\":\""
-		out += dado
-		out += "\", \"resposta\":\""
-		out += resposta
-		out += "\"}}"
-		#return "{\"vertice\":{\"ID\":",index,", \"dado\":\"",dado,"\", \"resposta\":\"",resposta,"\"}}"
-		return out
+		return "{\"delete\":{\"ID\":"+str(position)+",\"resposta\":\""+resposta+"\"}}"
+
+	def vizinhos(self, position):
+		"""
+		{"vizinhos":{"ID":1, "resposta":"sucesso", "vizinhos":[0,2,1]}}
+
+		{"vizinhos":{"ID":1, "resposta":"falha", "vizinhos":[]}}
+		"""
+		lista = []
+		
+		if (position >= 0 and position < self.size):
+			resposta = "sucesso"
+			for i in range(self.size):
+				if (self.matriz[position][i] > -1):
+					lista += [i]
+		else:
+			lista = []
+			resposta = "falha"
+		
+		return "{\"vizinhos\":{\"ID\":"+str(position)+",\"resposta\":\""+resposta+"\", \"vizinhos\":"+str(lista)+"}}"
 
 
+	def conexao(self, a, b): #B é adjacente a A (existe A -> B)
+		"""
+		Se existe uma conexão, independênte de dirigida ou não?
+
+		Se a conexão não existe, informar não?
+		{"conexao":{"ID1":0, "ID2":1, "resposta":"sucesso", "conexao":"sim"}}
+
+		{"conexao":{"ID1":0, "ID2":1, "resposta":"falha", "conexao":""}}
+		"""
+
+		conexao = ''
+
+		if a < self.size and b < self.size:
+			resposta = "sucesso"
+			if (self.matriz[a][b] > -1) :
+				conexao = "sim"
+			else:
+				conexao = "nao"
+		else:
+			resposta = "falha"
+
+		return "{\"conexao\":{\"ID\":"+str(a)+", \"ID2\":"+str(b)+", \"resposta\":\""+resposta+"\", \"conexao\":\""+conexao+"\"}}"
+
+	def arvoreminima(self):
+		"""
+			{"arvoreminima":{"arestas":[(1,2),(2,0),(1,0)], "custo":21}}
+		"""
 
 	def addEdge(self, a, b, weight):
-		if (a >= 0 and b >= 0) and (a < self.size and b < self.size):
+		"""
+			O que fazer se a aresta já existir?
+		"""
+		if (a >= 0 and a < self.size) and (b >= 0 and b < self.size):
 			self.matriz[a][b] = weight
 			return True
 		else:
@@ -119,36 +204,7 @@ class Graph():
 					
 		return True
 		
-	def removeNode(self, a):
-		if a >= 0 and a < self.size:
-			self.matriz.remove(self.matriz[a]) # Remove toda a linha a
-			self.size -= 1
-			
-			for i in range(self.size):
-				del self.matriz [i][a] # Remove a coluna a em todas as linhas
-				
-			return True
-		else:
-			return False
-				
-	def neighbors(self, a):
-		lista = []
 		
-		for i in range(self.size):
-			if (self.matriz[a][i] == 1):
-				lista += [i]
-			
-		return lista
-		
-	def checkAdjacency(self, a, b): #B é adjacente a A (existe A -> B)
-		if a < self.size and b < self.size:
-			if self.matriz[b][a] == 1 :
-				return True
-			else:
-				return False
-		else:
-			return False
-
 	def buscaAmplitude(self,origin,destination):
 		position = origin
 		checked = []

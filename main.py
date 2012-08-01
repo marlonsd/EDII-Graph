@@ -12,11 +12,31 @@
 	//	Main
 	// ------------------------------------------------------------
 """
+
+"""
+	O que está funcionando:
+		* Leitura das entradas (os *s)
+		* Vertices
+		* Edges
+		* Arcs
+		* Queries:
+			- conexao
+			- get
+			- delete (+-, vide Observações)
+"""
+
+"""
+	Observações:
+		* Único modo de terminar a execução do programa é como entrada o '@',
+		caso tenha como entrada alguma forma das não já esperadas, dará erro;
+		* Delete - ele dá o devido erro quando está fora do range ou o nodo não
+		existe; deve ser tratado COMO deletar um nodo.
+"""
 import sys
 from graph import Graph
 from queue import Queue
 from stack import Stack
-# OBS: Nem um dado passado como parâmetro, estranhamente, a função tem acesso aos dados de dentro do laço
+
 def vertices(): # Dá o nome aos vértices
 	i = 0
 	node = ''
@@ -32,19 +52,17 @@ def vertices(): # Dá o nome aos vértices
 			if (letter != '"'):
 				name += letter
 
-	node = int(node)
 	if (node >= 0 and node < graph.getSize()):
-		graph.setNode(node,name)
-	return graph.getID(node)
+		graph.setNode(int(node),name)
 
 def edges(): # Cria arestas não-direcionadas no formato V1 V2 Peso
 	v1, v2, weight = line.split(' ')
-	graph.addEdge(v1,v2,weight)
-	graph.addEdge(v2,v1,weight)
+	graph.addEdge(int(v1),int(v2),int(weight)) 
+	graph.addEdge(int(v2),int(v1),int(weight))
 
 def arcs(): # Cria arestas direcionadas no formato V1 V2 Peso, onde V1 é a origem
 	v1, v2, weight = line.split(' ')
-	graph.addEdge(v1,v2,weight)
+	graph.addEdge(int(v1),int(v2),int(weight))
 
 def queries(): # Ações no grafo
 	print "Queries"
@@ -79,6 +97,8 @@ while (True):
 					else:
 						if (option == "Queries"):
 							queries()
+						else:
+							break
 	except EOFError:
 		#print "Entrada chegou no fim, porém, não foi encontrado marcador de fim de leitura (@)."
 		#print "Programa abortado."

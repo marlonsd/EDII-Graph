@@ -18,7 +18,7 @@ class Node():
 	index = -1
 	label = ''
 
-	def __init__ (self, index, label = ''):
+	def __init__ (self, index = -1, label = ''):
 		self.index = index
 		self.label = label
 
