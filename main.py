@@ -22,15 +22,15 @@
 		* Queries:
 			- conexao
 			- get
-			- delete (+-, vide Observações)
+			- delete (vide Observações)
 """
 
 """
 	Observações:
 		* Único modo de terminar a execução do programa é como entrada o '@',
 		caso tenha como entrada alguma forma das não já esperadas, dará erro;
-		* Delete - ele dá o devido erro quando está fora do range ou o nodo não
-		existe; deve ser tratado COMO deletar um nodo.
+		* Delete - o nodo apagado deixa de existir e puxa os seguintes ao deletado
+		em uma posição.
 """
 import sys
 from graph import Graph
@@ -52,8 +52,9 @@ def vertices(): # Dá o nome aos vértices
 			if (letter != '"'):
 				name += letter
 
+	node = int(node)
 	if (node >= 0 and node < graph.getSize()):
-		graph.setNode(int(node),name)
+		graph.setNode(node,name)
 
 def edges(): # Cria arestas não-direcionadas no formato V1 V2 Peso
 	v1, v2, weight = line.split(' ')
@@ -65,7 +66,35 @@ def arcs(): # Cria arestas direcionadas no formato V1 V2 Peso, onde V1 é a orig
 	graph.addEdge(int(v1),int(v2),int(weight))
 
 def queries(): # Ações no grafo
-	print "Queries"
+
+	op = ''
+	i = 0
+	while (line[i] != ' '):
+		op += line[i]
+		i += 1
+
+	if (op == "get"):
+		print graph.get(int(line[i + 1]))
+	else:
+		if (op == "delete"):
+			print graph.delete(int(line[i + 1]))
+		else:
+			if (op == "vizinhos"):
+				print graph.vizinhos(int(line[i + 1]))
+			else:
+				if (op == "conexao"):
+					print graph.conexao(int(line[i + 1]), int(line[i + 3]))
+				else:
+					if (op == "ordemtopologica"):
+						print "ordemtopologica"
+					else:
+						if (op == "arvoreminima"):
+							print "arvoreminima	"
+						else:
+							if (op == "menorcaminho"):
+								print "menorcaminho"
+							else:
+								sys.exit(0)
 
 while (True):
 	try:

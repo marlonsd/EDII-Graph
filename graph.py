@@ -24,10 +24,11 @@ class Graph():
 	matriz = [[]]
 	vertice = []
 	size = 0
+	node = 0
 	
 	def __init__(self, size = 1):
 		self.size = size
-		
+		self.node = 0
 		"""
 		for i in range(self.size):
 			node = Node(i)
@@ -53,10 +54,14 @@ class Graph():
 	def getSize(self):
 		return self.size
 
+	def getNumeroNodos(self):
+		return self.node
+
 	def setNode(self,index,label):
 		if (index >= 0 and index < self.size):
 			self.vertice[index].setLabel(label)
 			self.vertice[index].setIndex(index)
+			self.node += 1
 		else:
 			print "MERDA"
 
@@ -66,7 +71,7 @@ class Graph():
 
 			{"vertice":{"ID":1, "dado":"", "resposta":"falha"}}
 		"""
-		if (position >= 0 and position < self.size):
+		if (position >= 0 and position < self.size and self.node > 0):
 			if (self.vertice[int(position)].getIndex() >= 0):
 				index = position
 			else:
@@ -93,7 +98,7 @@ class Graph():
 
 		"""
 
-		if (position >= 0 and position < self.size):
+		if (position >= 0 and position < self.size and self.node > 0):
 			if (self.vertice[int(position)].getIndex() >= 0):
 				index = position
 			else:
@@ -104,13 +109,14 @@ class Graph():
 		if (index >= 0):
 			self.matriz.remove(self.matriz[position]) # Remove toda a linha a
 			self.size -= 1
-
+			self.node -= 1
+			self.vertice[position + 1].setIndex(self.vertice[position].getIndex())
 			del self.vertice[position]
 			
 			for i in range(self.size):
 				del self.matriz [i][position] # Remove a coluna a em todas as linhas
-				if (i >= position):
-					self.vertice[i].setIndex(i)
+				"""if (i >= position):
+					self.vertice[i].setIndex(i)"""
 			resposta = "sucesso"
 		else:
 			resposta = "falha"
