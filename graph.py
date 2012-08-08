@@ -14,6 +14,8 @@
 """
 import sys
 from node import Node
+from heap import Heap
+from tree import Tree
 from queue import Queue
 from stack import Stack
 
@@ -26,6 +28,7 @@ class Graph():
 	vertice = []
 	size = 0
 	node = 0
+	edge = 0
 	
 	def __init__(self, size = 1):
 		self.size = size
@@ -41,7 +44,7 @@ class Graph():
 			self.matriz += [[]]
 			node = Node()
 			self.vertice += [node]
-				
+		edge = 0
 		"""for linha in range(size):
 			for coluna in range(size):
 				print self.matriz[linha][coluna],
@@ -169,8 +172,53 @@ class Graph():
 
 	def arvoreminima(self):
 		"""
+			Opera apenas em grafos não-direcionados e conectados
 			{"arvoreminima":{"arestas":[(1,2),(2,0),(1,0)], "custo":21}}
+			Dúvidas:
+				* A "árvore" precisa respeitar algum tipo de ordem, ou as
+				arestas podem aparecer em qualquer ordem, desde que formem
+				a árvore mínima?
 		"""
+
+		if (self.size <= 1):
+			return
+
+		copy = self.matriz
+		edges = []
+
+		menor = [-1,-1,-1]
+
+		for k in range (self.edge/2):
+			for i in range (self.size):
+				for j in range (i):
+					if (copy[i][j] > -1):
+						if (int(menor[2]) > int(-1)):
+							if (int(copy[i][j]) < int(menor[2])):
+								menor = [j,i,copy[i][j]]
+						else:
+							menor = [j,i,copy[i][j]]
+
+			copy[menor[1]][menor[0]] = -1
+			edges += [menor]
+			menor = [-1,-1,-1]
+
+		connected = Tree(self.size)
+		aux = edges.pop(0)
+
+		weight = aux[2]
+		tree = [[aux[0],aux[1]]]
+
+		while (len(tree) < self.size - 1):
+			aux = edges.pop(0)
+
+			if (connected.find(aux[0]) != connected.find(aux[1])):
+				weight += aux[2]
+				tree += [[aux[0],aux[1]]]
+				connected.merge(aux[0],aux[1])
+
+		print tree,weight
+		
+
 
 	def addEdge(self, a, b, weight):
 		"""
@@ -178,6 +226,7 @@ class Graph():
 		"""
 		if (a >= 0 and a < self.size) and (b >= 0 and b < self.size):
 			self.matriz[a][b] = weight
+			self.edge += 1
 			return True
 		else:
 			return False

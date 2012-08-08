@@ -19,10 +19,13 @@
 		- NÃO suporta valores repetidos, se tiver um valor e tentar
 		ser inserido um mesmo, simplesmente será ignorado a adição
 
+		* Como parâmtro das funções, é espero que se passe um "edge"
+
 """
 import sys
 import math
 from node import Node
+from edge import Edge
 from queue import Queue
 from stack import Stack
 
@@ -41,6 +44,8 @@ class Heap():
 
 	def insert(self, valor):
 
+		# Rejeitando Números Repetidos
+
 		try:
 			position = self.value.index(int(valor))
 		except ValueError:
@@ -51,13 +56,31 @@ class Heap():
 			while (position > 1):
 				comp = int(math.ceil(position / 2))
 
-				if self.value[position - 1] > self.value[comp - 1]:
+				if self.value[position - 1] < self.value[comp - 1]:
 					aux = self.value[position - 1]
 					self.value[position - 1] = self.value[comp - 1]
 					self.value[comp - 1] = aux
 					position = comp
 				else:
 					break
+
+		# Aceitando números repetidos
+		"""
+		self.value.append(int(valor))
+		self.size += 1
+
+		position = self.size
+		while (position > 1):
+			comp = int(math.ceil(position / 2))
+
+			if self.value[position - 1] < self.value[comp - 1]:
+				aux = self.value[position - 1]
+				self.value[position - 1] = self.value[comp - 1]
+				self.value[comp - 1] = aux
+				position = comp
+			else:
+				break
+		"""
 	
 	def change(self, valor, novo): # Valores informados a partir de 1
 		try:
@@ -74,6 +97,14 @@ class Heap():
 		self.size -= 1
 		self.changing(int(new),int(new))
 
+	def pop(self):
+		try:
+			pop = self.value[0]
+			self.delete(self.value[0])
+			return pop
+		except IndexError:
+			pass
+
 	def changing(self, valor, novo):
 		try:
 			position = self.value.index(int(valor))
@@ -87,11 +118,11 @@ class Heap():
 			self.value[position - 1] = int(novo)
 
 			comp = int(math.ceil(position / 2))
-			if ((self.value[position - 1] > self.value[comp - 1]) and position > 1):
+			if ((self.value[position - 1] < self.value[comp - 1]) and position > 1):
 				while (position > 1):
 					comp = int(math.ceil(position / 2))
 
-					if self.value[position - 1] > self.value[comp - 1]:
+					if self.value[position - 1] < self.value[comp - 1]:
 						aux = self.value[position - 1]
 						self.value[position - 1] = self.value[comp - 1]
 						self.value[comp - 1] = aux
@@ -118,7 +149,7 @@ class Heap():
 						else:
 							comp = position*2 + 1
 
-						if self.value[position - 1] < self.value[comp - 1]:
+						if self.value[position - 1] > self.value[comp - 1]:
 							aux = self.value[position - 1]
 							self.value[position - 1] = self.value[comp - 1]
 							self.value[comp - 1] = aux

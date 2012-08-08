@@ -69,9 +69,23 @@ def queries(): # Ações no grafo
 
 	op = ''
 	i = 0
+	
+	"""
 	while (line[i] != ' '):
 		op += line[i]
+		print i,
 		i += 1
+	"""
+
+	while (True):
+		try:
+			if (line[i] != ' '):
+				op += line[i]
+				i += 1
+			else:
+				break
+		except IndexError:
+			break
 
 	if (op == "get"):
 		print graph.get(int(line[i + 1]))
@@ -89,7 +103,7 @@ def queries(): # Ações no grafo
 						print "ordemtopologica"
 					else:
 						if (op == "arvoreminima"):
-							print "arvoreminima	"
+							graph.arvoreminima()
 						else:
 							if (op == "menorcaminho"):
 								print "menorcaminho"
