@@ -10,6 +10,7 @@
 	//	graph.py
 	//	
 	//	Classe Grafo
+	//  Arquivo com alguns métodos a mais
 	// ------------------------------------------------------------
 """
 import sys
@@ -341,3 +342,99 @@ class Graph():
 			return True
 		else:
 			return False
+			
+	def removeEdge(self, a, b):
+		if (a >= 0 and b >= 0) and (a < self.size and b < self.size):
+			self.matriz[a][b] = 0
+			return True
+		else:
+			return False
+		
+	def addNode(self):
+		
+		"""
+			Em cada linha adiciona uma nova coluna vazia ( [] )
+		"""
+		for i in range(self.size):
+			self.matriz[i] += [[]]
+		
+		self.matriz += [[]] # Adicina uma nova linha, contendo somente []
+		self.size += 1
+		
+		self.matriz[self.size - 1] = [0]*self.size
+		
+		"""
+			Percorre a matriz.
+				Em cada linha (var: linha) na sua última coluna (self.size - 1) troca o valor por 0
+		"""
+		for linha in range(self.size):
+			self.matriz[linha][self.size - 1] = 0
+					
+		return True
+		
+		
+	def buscaAmplitude(self,origin,destination):
+		position = origin
+		checked = []
+		queue = Queue()
+
+		if (position == destination):
+			return True
+		checked.append(position)
+		queue.enqueue(position)
+
+		while(not queue.isEmpty()):
+			position = queue.dequeue()
+			if (position == destination):
+				return True
+			checked.append(position)
+
+			neighbors = self.neighbors(position)
+			while(len(neighbors) != 0):
+				position = neighbors.pop(0)
+
+				try:
+					i = checked.index(position)
+				except ValueError:
+					i = -1
+
+				if (i == -1):
+					if (position == destination):
+						return True
+					checked.append(position)
+					queue.enqueue(position)
+
+		return False
+
+	def buscaAmplitude(self,origin,destination):
+		position = origin
+		checked = []
+		stack = Stack()
+
+		if (position == destination):
+			return True
+		checked.append(position)
+		stack.push(position)
+
+		while(not queue.isEmpty()):
+			position = stack.pop()
+			if (position == destination):
+				return True
+			checked.append(position)
+
+			neighbors = self.neighbors(position)
+			while(len(neighbors) != 0):
+				position = neighbors.pop(0)
+
+				try:
+					i = checked.index(position)
+				except ValueError:
+					i = -1
+
+				if (i == -1):
+					if (position == destination):
+						return True
+					checked.append(position)
+					stack.push(position)
+
+		return False

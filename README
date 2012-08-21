@@ -46,6 +46,11 @@ execução. Caso contenha alguma entrada inesperada, o programa aborta.
 Caso a ordem seja invertida (exemplo, Queries antes de Vertices ou
 Edges), acarreta em um possível mal funcionamento do grafo, visto que
 o grafo pode não ter sido inicializado/criado ainda.
+
+	Obs: Quanto as saídas de cada função, foram copiadas exatamento
+como são apresentadas no especificação do moodle, incluindo espaçamento
+entre palavaras. Os exemplos contigos neste arquivo, em sua grande parte,
+são copiados de lá também, tal como estão.
 -----------------------------------------------------------------------
 
 	3.1 Vertices
@@ -84,6 +89,11 @@ a última definição. Exemplo:
 					1 "Beltrano"
 
 	No final, o vértice 1 estará definido como "Beltrano".
+
+	É esperado que sejam criados NRO vértices (de 0 até NRO - 1). Visto
+que, não é possível definir um novo vértice fora desta área. Portanto,
+se é previsto que um vértice não vai ser criado, deve-se ser informado
+um valor menor a NRO.
 
 	Portanto, o algoritmo irá interpretar como o fim da inicialização
 dos vértices quando encontrar o começo da definição das arestas
@@ -127,7 +137,7 @@ realizadas no grafo.
 					OPERACAO <PARAMETRO 1> <PARAMETRO 2>
 
 	São possíveis as seguintes operações: get, delete, vizinhos,
-conexao, ordem topológica, árvore minima e  menor caminho. Os parâmetros
+conexão, ordem topológica, árvore mínima e  menor caminho. Os parâmetros
 dependem de casa operação.
 
 	Não há um limite de operações a serem realizadas, como está é a
@@ -177,7 +187,108 @@ positivo e falha em caso negativo. Exemplo de saídas:
 			{"delete":{"ID":15,"resposta":"sucesso"}}
 			{"delete":{"ID":15,"resposta":"falha"}}
 
+	Ao deletar um vértice todos os seguintes são "puxados" uma posição.
+
+	Por exemplo, tem-se 15 vértices (todos corretamente criados),
+numerados, então, de 0 a 14. Deseja-se deletar o vértice 13. Então:
+
+					*Queries
+					delete 13
+
+	Retornará a mensagem:
+			{"delete":{"ID":13,"resposta":"sucesso"}}
+
+	A partir de então, o vértice não existe mais bem como todas as
+arestas que dele saiam ou chegavam. E, além disso, o vértice que antes
+era o número 14 passa a ser o número 13, mantendo todas as suas
+características anteriores, porém, com um índice novo agora.
+***********************************************************************
+		
+		3.3.3 Vizinhos
+
+		Operação vizinhos é definida por:
+					*Queries
+					vizinhos VERTICE
+
+		Retorna uma lista de vizinhos do vértice VERTICE. No caso do
+grafo ser direcionado, os vizinhos são aqueles apontados pelo vértice.
+Caso o vértice não exista ou ele não possua vizinhos é retornado uma 
+mensagem de falha. Exemplos:
+
+	{"vizinhos":{"ID":1, "resposta":"sucesso", "vizinhos":[0,2,1]}}
+	{"vizinhos":{"ID":1, "resposta":"falha", "vizinhos":[]}}
+***********************************************************************
+
+		3.3.4 Conexão
+
+	Operação vizinhos é definida por:
+					*Queries
+					conexao ID1 ID2
+
+	Informa se existe uma conexão entre os vértices ID1 e ID2. No caso
+de grafo direcionados, verifica uma aresta que saia de ID1 e chege em
+ID2. Falha se ID1 ou ID2 não existirem ou a conexão não existir.
+Exemplos de retorno:
+
+	{"conexao":{"ID1":0, "ID2":1, "resposta":"sucesso", "conexao":"sim"}}
+	{"conexao":{"ID1":0, "ID2":1, "resposta":"falha", "conexao":""}}
+***********************************************************************
+
+		3.3.5 Ordem Topológica
+
+	Operação ordem topológica é definida por:
+					*Queries
+					ordemtopologica
+
+	Retorna uma lista de vértices em ordem topológica. Vértices na mesma
+posição na ordem devem ser listados em ordem crescente de ID. Opera em
+grafos que são possíveis de gerar uma Ordem Topológica, grafos direcionados,
+conectados e sem ciclos. Caso seja informado um grafo que não respeite
+essas características, a resposta pode não ser a esperada. 
+Exemplo de retorno:
+
+	{"ordemtop":[1,2,3,4,6,8,5,7]}
+	{"ordemtop":[]} // Possível retorno em momento de erro
+***********************************************************************
+
+		3.3.6 Árvore Mínima
+
+	Operação árvore mínima é definida por:
+					*Queries
+					arvoreminima
+	Retotorna uma lista de arestas que compõem a árvore mínima do grafo
+(saída do algoritmo de Kruskal), bem como o custo da árvore. Opera
+apenas em grafos não-direcionados e conectados. Caso seja informado um
+grafo que não respeite essas características, a resposta pode não ser a
+esperada. Exemplo de retorno:
+
+	{"arvoreminima":{"arestas":[(3,4),(1,2),(0,1),(2,3)], "custo":18}}
+***********************************************************************
+
+		3.3.7 Menor Caminho
+
+	Operação menor caminho é definida por:
+					*Queries
+					menorcaminho ID1 ID2 
+
+	Retorna uma lista de vértices que compõe o menor caminho entre ID1
+e ID2 (incluindo estes), além do custo desse caminho. O caminho deve ser
+vazio ([]) se não houver caminho. Opera apenas em grafos conectados.
+Caso seja informado um grafo que não respeite essas características, a
+resposta pode não ser a esperada. Exemplo de retorno:
+
+{"menorcaminho":{"ID":0, "ID2":7, "caminho":"[0,1,5,2,7]","custo":"60"}}
 ***********************************************************************
 -----------------------------------------------------------------------
+#######################################################################
 
-Delete - reajusta posições. Ex: 15 vértices (0 ~ 14), vértice 13 deletado, então o vértice 14 passa a ser o 13
+4. Considerações Finais
+	
+	O trabalho respeita as especificações informadas no moodle da
+disciplina, tanto suas funcionalidades quanto suas saídas. Foi pedido 
+para retornar strings em formato JSON, porém, foi-se utilizado o mesmo
+modelo em que se encontra na especificação.
+
+	Não foram feitos testes de estresse no programa.
+
+#######################################################################
