@@ -5,3 +5,160 @@
 // GitHub: https://github.com/marlonsd/EDII-Graph
 // README
 // ------------------------------------------------------------
+
+1. Introdução
+	O trabalho consiste na implementação de Grafo. Este é um
+trabalho desenvolvido para a disciplina de Estrutura da dados do curso
+de Ciência da Computação da Universidade Federal de Pelotas.
+
+#######################################################################
+
+2. Como foi programado e como executar
+	O trabalho foi desenvolvido em Python, utilizando Python 2.7.2+.
+Para executar o programa basta inserir, no terminal:
+						$ python main.py
+A entrada padrão do programa é o terminal, porém, pode ser desviada:
+				$ python main.py < NOME_ARQUIVO		
+O mesmo é válido para saída, porém, no lugar de "<" utiliza-se ">".
+
+#######################################################################
+
+3. Especificações do programa
+	O trabalho foi desenvolvido seguindo a especificação do mesmo no
+moodle da disciplina:
+	http://avainstitucional.ufpel.edu.br/mod/assignment/view.php?id=25409
+
+	O trabalho foi implementado com uma Matriz de Adjacência.
+
+	A entrada do programa segue uma ordem:
+
+					*Vertices NRO
+					 -- Operações --
+					*Edges / *Arcs
+					-- Operações --
+					*Queries
+					-- Operações --
+					@
+
+	A entrada deve seguir esta ordem e utilizar o '@' para finalizar a
+execução. Caso contenha alguma entrada inesperada, o programa aborta.
+Caso a ordem seja invertida (exemplo, Queries antes de Vertices ou
+Edges), acarreta em um possível mal funcionamento do grafo, visto que
+o grafo pode não ter sido inicializado/criado ainda.
+-----------------------------------------------------------------------
+
+	3.1 Vertices
+
+	Logo após da entrada "*Vertices" deve ser seguida de um número, que
+irá definir quantos vértices existirão no grafo. Este número deve ser um
+número Natural, e preferencialmente maior que zero.
+
+	Na linha seguinte, deve vir a inicialização de cada vértice:
+
+					*Vertices NRO
+					ÍNDICE_VÉRTICE "NOME DO VÉRTICE"
+
+	ÍNDICE_VÉRTICE também deve ser um número, tal que:
+					0 < ÍNDICE_VÉRTICE < NRO
+
+	Caso o número informado a ÍNDICE_VÉRTICE não respeite a condição
+acima o vértice não será criado, e nenhuma mensagem será retornada.
+
+	Exemplo funcional de Vertice:
+
+					*Vertices 3
+					1 "Fulano de Tal"
+					0 "Ciclano"
+					2 "Beltrano"
+
+	Logicamente, o número de vértices a serem definidos é o mesmo
+definido por NRO (se NRO = 3, 3 definições, como no exemplo acima),
+porém, caso seja definido mais de uma vez o mesmo vértices, será válido
+a última definição. Exemplo:
+
+					*Vertices 3
+					1 "Fulano de Tal"
+					0 "Ciclano"
+					2 "Beltrano"
+					1 "Beltrano"
+
+	No final, o vértice 1 estará definido como "Beltrano".
+
+	Portanto, o algoritmo irá interpretar como o fim da inicialização
+dos vértices quando encontrar o começo da definição das arestas
+(*Edges ou *Arcs).
+-----------------------------------------------------------------------
+
+	3.2 Edges / Arcs
+
+	Na linha seguinte a "*Edges" ou "*Arcs" deve vir a inicialização de
+cada aresta:
+
+					*Edges NRO
+					ID1 ID2 PESO
+
+					*Arcs NRO
+					ID1 ID2 PESO
+
+	Edges ou Arcs representam as arestas do grafo. Edges é referente à
+arestas não-direcionadas; Arcs à direcionadas.
+	Dentro do grafo, todas as arestas são direcionadas, mas, ao se usar
+Edges é criado uma aresta com origem em ID1 e destino ID2 e outra com
+origem em ID2 e destino ID1. Enquanto Arcs cria uma aresta com origem
+em ID1 e destino ID2.
+
+	O PESO deve ser um valor Natural.
+
+	Não há um limite para o número de arestas a serem criadas, será
+interpretado o fim da criação de vértices quando for encontrado o comando
+das operações (*Queries) . Porém há um número máximo de arestas possíveis
+de se existir dentro de um grafo dado seu número de vértices. Caso exceda
+esse número, significa que tem aresta repetida. Caso exista aresta
+repetida, será válido (o peso) da última aresta.
+-----------------------------------------------------------------------
+
+	3.3 Queries
+
+	Seguido a este comando, deve vir a lista de operações a serem
+realizadas no grafo.
+
+					*Queries
+					OPERACAO <PARAMETRO 1> <PARAMETRO 2>
+
+	São possíveis as seguintes operações: get, delete, vizinhos,
+conexao, ordem topológica, árvore minima e  menor caminho. Os parâmetros
+dependem de casa operação.
+
+	Não há um limite de operações a serem realizadas, como está é a
+última possibilidade de se trabalhar no grafo, irá ser interpretado o 
+fim das operações quando for encontrado o símbolo defindo para parar a
+execução do programa ('@'). Caso alguma operação que não as previamente
+estabelecidas seja informada o programa irá abortar. O mesmo vale se
+tentar executar uma das previamente estabelecidas mas com um diferente
+nome.
+***********************************************************************
+
+		3.3.1 Get
+
+	Operação get é definda por:
+					*Queries
+					get VERTICE
+
+	A qual a finalidade é acessar VERTICE e trazer as informações nele
+presente. Como resposta é obtido:
+{"vertice":{"ID":INDICE, "dado":DADO, "resposta":RESPOSTA}}
+
+	Onde INDICE é o índice do vértice que se procura (INDICE = VERTICE).
+DADO é a informação contida no vértice, caso o vértice não exista essa
+opção permace em branco. E RESPOSTA é referente a tentativa de acessar
+o vértice, sucesso em caso positivo e falha em caso negativo. Exemplo
+de saídas:
+
+	{"vertice":{"ID":1, "dado":"Fulano de Tal", "resposta":"sucesso"}}
+	{"vertice":{"ID":1, "dado":"", "resposta":"falha"}}
+***********************************************************************
+		3.3.2 Delete
+***********************************************************************
+-----------------------------------------------------------------------
+
+Delete - reajusta posições. Ex: 15 vértices (0 ~ 14), vértice 13 deletado, então o vértice 14 passa a ser o 13

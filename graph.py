@@ -22,6 +22,14 @@ from stack import Stack
 """
 	* Retirar os palavrões do meio do programa
 """
+
+"""
+	* Vizinhos:
+		- Retorna falha e uma lista vazia caso não existam vizinhos
+	* Conexão:
+		- Caso não exista, retorna falha e " conexao = '' "
+"""
+
 class Graph():
 	
 	matriz = [[]]
@@ -63,11 +71,10 @@ class Graph():
 
 	def setNode(self,index,label):
 		if (index >= 0 and index < self.size):
+			if (self.vertice[index].getIndex() == -1):
+				self.node += 1
 			self.vertice[index].setLabel(label)
 			self.vertice[index].setIndex(index)
-			self.node += 1
-		else:
-			print "MERDA"
 
 	def get(self,position):
 		"""
@@ -136,15 +143,25 @@ class Graph():
 		lista = []
 		
 		if (position >= 0 and position < self.size):
-			resposta = "sucesso"
 			for i in range(self.size):
 				if (self.matriz[position][i] > -1):
 					lista += [i]
+			if (len(lista) > 0):
+				resposta = "sucesso"
+				out = "["
+				for i in range(len(lista)):
+					if (i < (len(lista) - 1)):
+						out += str(lista[i])+str(',')
+					else:
+						out += str(lista[i])+str(']')
+			else:
+				out = []
+				resposta = "falha"
 		else:
-			lista = []
+			out = []
 			resposta = "falha"
 		
-		return "{\"vizinhos\":{\"ID\":"+str(position)+",\"resposta\":\""+resposta+"\", \"vizinhos\":"+str(lista)+"}}"
+		return "{\"vizinhos\":{\"ID\":"+str(position)+", \"resposta\":\""+resposta+"\", \"vizinhos\":"+str(out)+"}}"
 
 
 	def conexao(self, a, b): #B é adjacente a A (existe A -> B)
@@ -155,18 +172,15 @@ class Graph():
 		{"conexao":{"ID1":0, "ID2":1, "resposta":"sucesso", "conexao":"sim"}}
 
 		{"conexao":{"ID1":0, "ID2":1, "resposta":"falha", "conexao":""}}
+
 		"""
 
 		conexao = ''
-
+		resposta = "falha"
 		if a < self.size and b < self.size:
-			resposta = "sucesso"
 			if (self.matriz[a][b] > -1) :
 				conexao = "sim"
-			else:
-				conexao = "nao"
-		else:
-			resposta = "falha"
+				resposta = "sucesso"
 
 		return "{\"conexao\":{\"ID\":"+str(a)+", \"ID2\":"+str(b)+", \"resposta\":\""+resposta+"\", \"conexao\":\""+conexao+"\"}}"
 
@@ -180,14 +194,17 @@ class Graph():
 				a árvore mínima?
 		"""
 
-		if (self.size <= 1):
-			return
+		#if (self.size <= 1):
+		#	return
 
 		copy = self.matriz
 		edges = []
-
 		menor = [-1,-1,-1]
 
+		teste = False
+
+		out = []
+		weight = ''
 		for k in range (self.edge/2):
 			for i in range (self.size):
 				for j in range (i):
@@ -195,38 +212,162 @@ class Graph():
 						if (int(menor[2]) > int(-1)):
 							if (int(copy[i][j]) < int(menor[2])):
 								menor = [j,i,copy[i][j]]
+								teste = True
 						else:
 							menor = [j,i,copy[i][j]]
+							teste = True
 
 			copy[menor[1]][menor[0]] = -1
 			edges += [menor]
 			menor = [-1,-1,-1]
 
-		connected = Tree(self.size)
-		aux = edges.pop(0)
-
-		weight = aux[2]
-		tree = [[aux[0],aux[1]]]
-
-		while (len(tree) < self.size - 1):
+		if teste:
+			connected = Tree(self.size)
 			aux = edges.pop(0)
 
-			if (connected.find(aux[0]) != connected.find(aux[1])):
-				weight += aux[2]
-				tree += [[aux[0],aux[1]]]
-				connected.merge(aux[0],aux[1])
+			weight = aux[2]
+			tree = [[aux[0],aux[1]]]
 
-		print tree,weight
+			while (len(tree) < self.size - 1):
+				aux = edges.pop(0)
+
+				if (connected.find(aux[0]) != connected.find(aux[1])):
+					weight += aux[2]
+					tree += [[aux[0],aux[1]]]
+					connected.merge(aux[0],aux[1])
+
+			out = "["
+			for i in range(len(tree)):
+				out += str("(")+str(tree[i][0])+","+str(tree[i][1])+")"
+				if (i < (len(tree) - 1)):
+					out += str(',')
+			out += "]"
+
+
+		#print tree,weight
+		return "{\"arvoreminima\":{\"arestas\":"+str(out)+", \"custo\":"+str(weight)+"}}"
 		
+	def menorcaminho(self, a, b):
+		"""
+			{"menorcaminho":{"ID1":0, "ID2":3, "caminho":[0,2,5,4,3], "custo":17}}
+			'a' representa infinito
+		"""
 
+		out = []
+		custo = ''
+
+		dist = []
+		for i in range(self.size):
+			dist += [['a',[]]]
+
+		dist[int(a)][0] = 0
+		dist[int(a)][1] = [int(a)]
+
+		q = []
+		for i in range(self.size):
+			q += [i]
+
+		caminho = []
+
+		while (len(q) > 0):
+			none = True
+			menor = 'a'
+			for i in range (len(dist)):
+				if (dist[i][0] != 'a'):
+
+					try:
+						aux = q.index(i)
+					except ValueError:
+						aux = -1
+
+					if (aux > -1):
+						if (menor != 'a'):
+
+							if (dist[i][0] < menor):
+								menor = dist[i][0]
+								u = i
+								none = False
+						else:
+							menor = dist[i][0]
+							u = i
+							none = False
+			
+			if none:
+				break
+			q.remove(int(u))
+			
+			for i in range (self.size):
+
+				if (self.matriz[u][i] > -1):
+					alt = dist[u][0] + self.matriz[u][i]
+					caminho = dist[u][1]
+					if (dist[i][0] != 'a'):
+						if alt < dist[i][0]:
+							dist[i][0] = alt
+							dist[i][1] = dist[u][1] + [int(i)] 
+					else:
+						dist[i][0] = alt
+						dist[i][1] = dist[u][1] + [int(i)]
+
+		#print dist
+		custo = dist[int(b)][0]
+
+		if (dist[int(b)][0] == 'a'):
+			custo = ''
+
+		out = ""
+		i = 1
+		while (i < len(dist[int(b)])):
+			out += str(dist[int(b)][i])
+			i += 1
+			if (i < len(dist[int(b)])):
+				out += str(',')
+
+		return "{\"menorcaminho\":{\"ID\":"+str(a)+", \"ID2\":"+str(b)+", \"caminho\":\""+str(out)+"\", \"custo\":\""+str(custo)+"\"}}"
+
+
+
+	def ordemtopologica(self):
+		"""
+			{"ordemtop":[1,2,0]}
+		"""
+		out = []
+
+		ordemtop = []
+		edges = self.matriz
+
+		while (len(ordemtop) < self.node):
+			for coluna in range(self.size):
+				if (self.vertice[coluna].getIndex() > -1):
+					try:
+						i = ordemtop.index(coluna)
+					except ValueError:
+						tryout = True
+						for linha in range(self.size):
+							if (self.vertice[linha].getIndex() > -1):
+								if (edges[linha][coluna] > -1):
+									tryout = False
+									break
+						if tryout:
+							ordemtop += [coluna]
+							for i in range(self.size):
+								edges [coluna][i] = -1
+
+		if tryout:
+			out = "["
+			for i in range(len(ordemtop)):
+				out += str(ordemtop[i])
+				if (i < (len(ordemtop) - 1)):
+					out += str(',')
+			out += "]"
+		#print ordemtop
+		return "{\"ordemtop\":"+str(out)+"}"
 
 	def addEdge(self, a, b, weight):
-		"""
-			O que fazer se a aresta já existir?
-		"""
 		if (a >= 0 and a < self.size) and (b >= 0 and b < self.size):
+			if (self.matriz[a][b] == -1):
+				self.edge += 1
 			self.matriz[a][b] = weight
-			self.edge += 1
 			return True
 		else:
 			return False

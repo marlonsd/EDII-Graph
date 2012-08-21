@@ -14,21 +14,7 @@
 """
 
 """
-	O que está funcionando:
-		* Leitura das entradas (os *s)
-		* Vertices
-		* Edges
-		* Arcs
-		* Queries:
-			- conexao
-			- get
-			- delete (vide Observações)
-"""
-
-"""
 	Observações:
-		* Único modo de terminar a execução do programa é como entrada o '@',
-		caso tenha como entrada alguma forma das não já esperadas, dará erro;
 		* Delete - o nodo apagado deixa de existir e puxa os seguintes ao deletado
 		em uma posição.
 """
@@ -100,13 +86,13 @@ def queries(): # Ações no grafo
 					print graph.conexao(int(line[i + 1]), int(line[i + 3]))
 				else:
 					if (op == "ordemtopologica"):
-						print "ordemtopologica"
+						print graph.ordemtopologica()
 					else:
 						if (op == "arvoreminima"):
-							graph.arvoreminima()
+							print graph.arvoreminima()
 						else:
 							if (op == "menorcaminho"):
-								print "menorcaminho"
+								print graph.menorcaminho(int(line[i + 1]), int(line[i + 3]))
 							else:
 								sys.exit(0)
 
