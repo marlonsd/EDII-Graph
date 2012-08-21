@@ -279,7 +279,9 @@ resposta pode não ser a esperada. Exemplo de retorno:
 
 {"menorcaminho":{"ID":0, "ID2":7, "caminho":"[0,1,5,2,7]","custo":"60"}}
 ***********************************************************************
+
 -----------------------------------------------------------------------
+
 #######################################################################
 
 4. Considerações Finais
@@ -288,6 +290,11 @@ resposta pode não ser a esperada. Exemplo de retorno:
 disciplina, tanto suas funcionalidades quanto suas saídas. Foi pedido 
 para retornar strings em formato JSON, porém, foi-se utilizado o mesmo
 modelo em que se encontra na especificação.
+
+	Não foi utilizado os métodos para conversão JSON automática da
+biblioteca Python, pois este estava gerando uma saída um pouco diferente
+com a informada na especificação, portanto, está sendo gerada de forma
+manual a saída
 
 	Não foram feitos testes de estresse no programa.
 
