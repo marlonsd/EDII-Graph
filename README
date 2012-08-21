@@ -146,7 +146,8 @@ nome.
 
 	A qual a finalidade é acessar VERTICE e trazer as informações nele
 presente. Como resposta é obtido:
-{"vertice":{"ID":INDICE, "dado":DADO, "resposta":RESPOSTA}}
+
+	{"vertice":{"ID":INDICE, "dado":DADO, "resposta":"RESPOSTA"}}
 
 	Onde INDICE é o índice do vértice que se procura (INDICE = VERTICE).
 DADO é a informação contida no vértice, caso o vértice não exista essa
@@ -158,6 +159,23 @@ de saídas:
 	{"vertice":{"ID":1, "dado":"", "resposta":"falha"}}
 ***********************************************************************
 		3.3.2 Delete
+
+	Operação delete é definida por:
+					*Queries
+					delete VERTICE
+
+	A qual a finalidade é deletar o vértice VERTICE. Como resposta é
+obtido:
+
+	{"delete":{"ID":INDICE,"resposta":"RESPOSTA"}}
+
+	Onde INDICE é o índice do vértice que se procura (INDICE = VERTICE).
+E RESPOSTA é referente a tentativa de deletar o vértice, sucesso em caso
+positivo e falha em caso negativo. Exemplo de saídas:
+
+			{"delete":{"ID":15,"resposta":"sucesso"}}
+			{"delete":{"ID":15,"resposta":"falha"}}
+
 ***********************************************************************
 -----------------------------------------------------------------------
 
