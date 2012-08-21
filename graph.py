@@ -3,7 +3,7 @@
 """
 	// ------------------------------------------------------------
 	//  Trabalho Estrutura de Dados II - Grafo
-	//		Ciênia da Computação
+	//			Ciênia da Computação
 	//
 	//	Aluno: Marlon da Silva Dias
 	//	GitHub: https://github.com/marlonsd/EDII-Graph
