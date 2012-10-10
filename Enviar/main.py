@@ -1,0 +1,141 @@
+#coding: utf-8
+
+"""
+	// ------------------------------------------------------------
+	//  Trabalho Estrutura de Dados II - Grafo
+	//			Ciênia da Computação
+	//
+	//	Aluno: Marlon da Silva Dias
+	//	GitHub: https://github.com/marlonsd/EDII-Graph
+	//	main.py
+	//	
+	//	Main
+	// ------------------------------------------------------------
+"""
+
+"""
+	Observações:
+		* Delete - o nodo apagado deixa de existir e puxa os seguintes ao deletado
+		em uma posição.
+"""
+import sys
+from graph_ import Graph
+from queue import Queue
+from stack import Stack
+
+def vertices(): # Dá o nome aos vértices
+	i = 0
+	node = ''
+	name = ''
+				
+	for letter in line:
+		if (i == 0):
+			if (letter != ' '):
+				node += letter
+			else:
+				i = 1
+		else:
+			if (letter != '"'):
+				name += letter
+
+	node = int(node)
+	#print node
+	if (node >= 0 and node < graph.getSize()):
+		graph.setNode(node,name)
+
+def edges(): # Cria arestas não-direcionadas no formato V1 V2 Peso
+	v1, v2, weight = line.split(' ')
+	#print v1, v2, weight
+	graph.addEdge(int(v1),int(v2),int(weight)) 
+	graph.addEdge(int(v2),int(v1),int(weight))
+
+def arcs(): # Cria arestas direcionadas no formato V1 V2 Peso, onde V1 é a origem
+	v1, v2, weight = line.split(' ')
+	#print v1, v2, weight
+	graph.addEdge(int(v1),int(v2),int(weight))
+
+def queries(): # Ações no grafo
+
+	op = ''
+	i = 0
+	
+	"""
+	while (line[i] != ' '):
+		op += line[i]
+		print i,
+		i += 1
+	"""
+
+	"""while (True):
+		try:
+			if (line[i] != ' '):
+				op += line[i]
+				i += 1
+			else:
+				break
+		except IndexError:
+			break
+	"""
+	op = line.split(' ')
+	#print op
+	if (op[0] == "get"):
+		print graph.get(int(op[1]))
+	else:
+		if (op[0] == "delete"):
+			print graph.delete(int(op[1]))
+		else:
+			if (op[0] == "vizinhos"):
+				print graph.vizinhos(int(op[1]))
+			else:
+				if (op[0] == "conexao"):
+					print graph.conexao(int(op[1]), int(op[2]))
+				else:
+					if (op[0] == "ordemtopologica"):
+						print graph.ordemtopologica()
+					else:
+						if (op[0] == "arvoreminima"):
+							print graph.arvoreminima()
+						else:
+							if (op[0] == "menorcaminho"):
+								#print "menorcaminho"
+								print graph.menorcaminho(int(op[1]), int(op[2]))
+							else:
+								sys.exit(0)
+
+while (True):
+	try:
+		line = raw_input()
+
+		if (line == '@'):
+			break
+
+		if (line[0] == '*'):
+			number = ''
+			option = ''
+			for letter in line:
+				if (letter != '*' and letter != ' ' and letter != '\n'):
+					if (letter >= '0' and letter <= '9'):
+						number += letter
+					else:
+						option += letter
+
+			if (option == "Vertices"):
+				graph = Graph(int(number))
+		else:
+			if (option == "Vertices"):
+				vertices()
+			else:
+				if (option == "Edges"):
+					edges()
+				else:
+					if (option == "Arcs"):
+						arcs()
+					else:
+						if (option == "Queries"):
+							queries()
+						else:
+							break
+	except EOFError:
+		#print "Entrada chegou no fim, porém, não foi encontrado marcador de fim de leitura (@)."
+		#print "Programa abortado."
+		break
